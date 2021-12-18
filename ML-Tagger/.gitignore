@@ -1,0 +1,10 @@
+x64/
+Release/
+Release/x64/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcxproj.user.filters
+.vs/
+.*
+!/.gitignore
