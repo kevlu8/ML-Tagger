@@ -4,14 +4,8 @@ if __name__ == '__main__':
     print("You're running the wrong file. Please run main.py instead.")
     exit()
 
-import os
 import sys
 import PySimpleGUI as sg
-
-eventQueue = []
-
-def getEvent():
-    return eventQueue.pop(0)
 
 def createWindow():
     if sys.platform.startswith('win'):

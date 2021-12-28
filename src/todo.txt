@@ -1,0 +1,2 @@
+- Maybe add loading when converting and scaling image (due to it being a very expensive operation)
+- Develop and train model
