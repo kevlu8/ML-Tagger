@@ -1,45 +1,50 @@
 # This script combines the many files that are used to make the program work.
 
-def main():
-    import window
-    import detect
+import window
+# import detect
 
-    from threading import Thread
-    import PIL.Image
-    import tempfile
-    import math
-    import time
-    import os
+from threading import Thread
+import PIL.Image
+import tempfile
+import math
+import time
+import os
 
-    eventQueue = []
+eventQueue = []
 
-    def convertAndScale(filename):
-        MAX_HEIGHT, MAX_WIDTH = 852, 480
-        img = PIL.Image.open(filename[0])
-        width, height = img.size
-        if width > MAX_WIDTH or height > MAX_HEIGHT:
-            scale = max(width, height) / min(MAX_WIDTH, MAX_HEIGHT)
-            if width / scale > MAX_WIDTH or height / scale > MAX_HEIGHT:
-                scale = max(width, height) / max(MAX_WIDTH, MAX_HEIGHT)
-            img = img.resize((math.floor(width / scale), math.floor(height / scale)))
-            if filename[0] != filename[1]:
-                img.save(filename[0], "png")
-            else:
-                fd, file = tempfile.mkstemp()
-                os.close(fd)
-                filename = (file, filename[0])
-                img.save(filename[0], "png")
-        elif filename[0].lower().endswith((".jpg", ".jpeg")):
+
+def convertAndScale(filename):
+    MAX_HEIGHT, MAX_WIDTH = 852, 480
+    img = PIL.Image.open(filename[0])
+    width, height = img.size
+    if width > MAX_WIDTH or height > MAX_HEIGHT:
+        scale = max(width, height) / min(MAX_WIDTH, MAX_HEIGHT)
+        if width / scale > MAX_WIDTH or height / scale > MAX_HEIGHT:
+            scale = max(width, height) / max(MAX_WIDTH, MAX_HEIGHT)
+        img = img.resize((
+            math.floor(width / scale),
+            math.floor(height / scale)
+        ))
+        if filename[0] != filename[1]:
+            img.save(filename[0], "png")
+        else:
             fd, file = tempfile.mkstemp()
             os.close(fd)
-
-            # Save the png to the temp file
-            pil_image = PIL.Image.open(filename[0])
-            pil_image.save(file, "png")
-
             filename = (file, filename[0])
-        eventQueue.append(("convertAndScale finished", {"filename":filename}))
+            img.save(filename[0], "png")
+    elif filename[0].lower().endswith((".jpg", ".jpeg")):
+        fd, file = tempfile.mkstemp()
+        os.close(fd)
 
+        # Save the png to the temp file
+        pil_image = PIL.Image.open(filename[0])
+        pil_image.save(file, "png")
+
+        filename = (file, filename[0])
+    eventQueue.append(("convertAndScale finished", {"filename": filename}))
+
+
+def main():
     appWindow = window.createWindow()
 
     while True:
@@ -84,6 +89,7 @@ def main():
         time.sleep(0.01)
 
     appWindow.close()
+
 
 if __name__ == "__main__":
     main()

@@ -15,10 +15,10 @@ def main():
         print("You don't have any labels!")
         exit()
 
-    import torch
+    # import torch
     from torch import nn
-    from torchvision.transforms import transforms
-    import PIL
+    # from torchvision.transforms import transforms
+    # import PIL
 
     class Net(nn.Module):
         def __init__(self):
@@ -26,8 +26,10 @@ def main():
             self.main = nn.Sequential(
                 # Define layers here
             )
+
         def forward(self, x):
             return self.main(x)
+
 
 if __name__ == "__main__":
     main()
