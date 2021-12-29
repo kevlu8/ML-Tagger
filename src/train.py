@@ -18,9 +18,7 @@ if not os.path.exists("data/labels.json"):
     print("You don't have any labels!")
     exit()
 
-import PySimpleGUI as sg
 import torch
-import cv2
 from torch import nn
 from torchvision.transforms import transforms
 import PIL
