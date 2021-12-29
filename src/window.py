@@ -1,4 +1,4 @@
-# This is what will draw out the window.
+# This is what will create the window.
 
 if __name__ == "__main__":
     print("You're running the wrong file. Please run main.py instead.")
@@ -12,10 +12,13 @@ def createWindow():
         import ctypes
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u"kevlu8.ML-Tagger.0.1.3.alpha")
         platform = "windows"
+        icon = "icon.ico"
     elif sys.platform.startswith("linux"):
         platform = "linux"
+        icon = "icon.png"
     elif sys.platform.startswith("darwin"):
         platform = "mac"
+        icon = "icon.icns"
     else:
         print("Unsupported platform: " + sys.platform)
         sys.exit(1)
@@ -50,11 +53,6 @@ def createWindow():
         ]
     ]
 
-    if platform == "windows":
-        window = sg.Window("ML-Tagger AI Window", layout, icon="icon.ico", finalize=True)
-    elif platform == "linux":
-        window = sg.Window("ML-Tagger AI Window", layout, icon="icon.png", finalize=True)
-    elif platform == "mac":
-        window = sg.Window("ML-Tagger AI Window", layout, icon="icon.icns", finalize=True)
-
+    window = sg.Window("ML-Tagger AI Window", layout, icon=icon, finalize=True)
+        
     return window
