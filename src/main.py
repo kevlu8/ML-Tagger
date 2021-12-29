@@ -8,7 +8,6 @@ import window
 import detect
 
 from threading import Thread
-import PySimpleGUI as sg
 import PIL.Image
 import tempfile
 import math
@@ -51,7 +50,7 @@ while True:
         event, values = eventQueue.pop()
     else:
         event, values = appWindow.read(0)
-    if event == "Exit" or event == sg.WIN_CLOSED:
+    if event == "Exit" or event == window.sg.WIN_CLOSED:
         break
     if event == "-IMAGE_FOLDER-":
         folder = values["-IMAGE_FOLDER-"]
