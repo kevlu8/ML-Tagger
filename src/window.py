@@ -51,10 +51,10 @@ def createWindow():
     ]
 
     if platform == "windows":
-        window = sg.Window("Image Viewer", layout, icon="icon.ico", finalize=True)
+        window = sg.Window("ML-Tagger AI Window", layout, icon="icon.ico", finalize=True)
     elif platform == "linux":
-        window = sg.Window("Image Viewer", layout, icon="icon.png", finalize=True)
+        window = sg.Window("ML-Tagger AI Window", layout, icon="icon.png", finalize=True)
     elif platform == "mac":
-        window = sg.Window("Image Viewer", layout, icon="icon.icns", finalize=True)
+        window = sg.Window("ML-Tagger AI Window", layout, icon="icon.icns", finalize=True)
 
     return window

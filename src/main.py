@@ -43,7 +43,6 @@ def convertAndScale(filename):
 
         filename = (file, filename[0])
     eventQueue.append(("convertAndScale finished", {"filename":filename}))
-    
 
 appWindow = window.createWindow()
 
