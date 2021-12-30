@@ -11,10 +11,9 @@ import time
 import os
 
 eventQueue = []
-
+MAX_HEIGHT, MAX_WIDTH = 852, 480 # 480p
 
 def convertAndScale(filename):
-    MAX_HEIGHT, MAX_WIDTH = 852, 480
     img = PIL.Image.open(filename[0])
     width, height = img.size
     if width > MAX_WIDTH or height > MAX_HEIGHT:
