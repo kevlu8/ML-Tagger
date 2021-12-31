@@ -25,9 +25,9 @@ class Net(nn.Module):
             nn.LeakyReLU(0.2, True),
             nn.MaxPool2d(2, 2),
             nn.Flatten(),
-            nn.Linear(8192, 4096),
+            nn.Linear(2048, 1024),
             nn.LeakyReLU(0.2, True),
-            nn.Linear(4096, 601),
+            nn.Linear(1024, 601),
             nn.Sigmoid()
         )
 
@@ -45,20 +45,21 @@ def detect(imagePath):
     return tags[model(PIL.Image.open(imagePath).convert())]
 '''
 
-THRESHOLD = 0.7
+THRESHOLD = 0.5
 MAX_TAGS = 20
 
 def detect(imagePath, eventQueue):
     with open("tags.txt") as f:
         tags = f.read().split("\n")
     model = Net()
-    model.load_state_dict(torch.load("weights.pth"))
-    estimate = model(torch.Tensor(cv2.resize(cv2.imread(imagePath, cv2.IMREAD_COLOR), (512, 512))).view((1, 3, 512, 512)).float())
+    model.load_state_dict(torch.load("weights.pth")["model"])
+    model.eval()
+    estimate = model(transforms.F.to_tensor(cv2.resize(cv2.imread(imagePath, cv2.IMREAD_COLOR), (256, 256))).view((1, 3, 256, 256)).float())
     # tags = model(PIL.Image.open(imagePath))
     output = []
     for i, e in enumerate(estimate[0]):
         if e > THRESHOLD:
             output.append((tags[i], round(e.item(), 3) * 100))
     output.sort(key=lambda a: str(a[1]) + a[0], reverse=True)
-    # print(output)
+    print(estimate)
     eventQueue.append(("detect finished", {"tags": output[:MAX_TAGS]}))
