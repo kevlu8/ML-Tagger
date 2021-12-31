@@ -92,7 +92,7 @@ def main():
 
     model.train()
 
-    criterion = nn.MSELoss()
+    criterion = nn.BCELoss()
 
     epochs = 25
 
