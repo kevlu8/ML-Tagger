@@ -2,6 +2,7 @@
 
 import window
 import detect
+import signal
 
 from threading import Thread
 import PIL.Image
@@ -12,6 +13,12 @@ import os
 
 eventQueue = []
 MAX_HEIGHT, MAX_WIDTH = 852, 480 # 480p
+
+
+def handler(sig, frame):
+    eventQueue.append(("SIGINT", frame))
+    return signal.SIG_IGN
+
 
 def convertAndScale(filename):
     img = PIL.Image.open(filename[0])
@@ -44,6 +51,7 @@ def convertAndScale(filename):
 
 
 def main():
+    signal.signal(signal.SIGINT, handler)
     appWindow = window.createWindow()
 
     while True:
@@ -51,7 +59,7 @@ def main():
             event, values = eventQueue.pop()
         else:
             event, values = appWindow.read(0)
-        if event == "Exit" or event == window.sg.WIN_CLOSED:
+        if event == "Exit" or event == window.sg.WIN_CLOSED or event == "SIGINT":
             break
         if event == "-IMAGE_FOLDER-":
             folder = values["-IMAGE_FOLDER-"]
@@ -75,17 +83,20 @@ def main():
             except IndexError:
                 continue
             appWindow["-GET_TAGS-"].update(disabled=True)
+            appWindow["-TAGS-"].update("")
             Thread(target=convertAndScale, args=(filename,), daemon=True).start()
-        if event == "convertAndScale finished":
+        elif event == "convertAndScale finished":
             filename = values["filename"]
             appWindow["-TOUT-"].update(filename[1])
             appWindow["-GET_TAGS-"].update(disabled=False)
             appWindow["-PREVIEW_IMAGE-"].update(filename=filename[0])
-            # if filename[0] != filename[1]:
-            #    os.remove(filename[0])
+            if filename[0] != filename[1]:
+               os.remove(filename[0])
         elif event == "-GET_TAGS-":
-            convertAndScale(filename)
-            appWindow["-TAGS-"] = detect.detect(filename[1])
+            Thread(target=detect.detect, args=(filename[1], eventQueue), daemon=True).start()
+        elif event == "detect finished":
+            tags = values["tags"]
+            appWindow["-TAGS-"].update("\n".join([f"{a}, Confidence: {b}%" for a, b in tags]))
         time.sleep(0.01)
 
     appWindow.close()

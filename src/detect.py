@@ -7,7 +7,7 @@ if __name__ == "__main__":
 import torch
 from torch import nn
 from torchvision.transforms import transforms
-import PIL.Image
+import cv2
 
 class Net(nn.Module):
     def __init__(self):
@@ -45,14 +45,20 @@ def detect(imagePath):
     return tags[model(PIL.Image.open(imagePath).convert())]
 '''
 
-def detect(imagePath):
-    tags = []
+THRESHOLD = 0.7
+MAX_TAGS = 20
+
+def detect(imagePath, eventQueue):
+    with open("tags.txt") as f:
+        tags = f.read().split("\n")
     model = Net()
     model.load_state_dict(torch.load("weights.pth"))
-    tags = model(transforms.Compose((
-  transforms.PILToTensor(),
-  transforms.Resize((512, 512)),
-))(PIL.Image.open(imagePath)).view((1, 3, 512, 512)))
+    estimate = model(torch.Tensor(cv2.resize(cv2.imread(imagePath, cv2.IMREAD_COLOR), (512, 512))).view((1, 3, 512, 512)).float())
     # tags = model(PIL.Image.open(imagePath))
-    print(tags)
-    return tags
+    output = []
+    for i, e in enumerate(estimate[0]):
+        if e > THRESHOLD:
+            output.append((tags[i], round(e.item(), 3) * 100))
+    output.sort(key=lambda a: str(a[1]) + a[0], reverse=True)
+    # print(output)
+    eventQueue.append(("detect finished", {"tags": output[:MAX_TAGS]}))
