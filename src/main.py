@@ -1,7 +1,7 @@
 # This script combines the many files that are used to make the program work.
 
 import window
-# import detect
+import detect
 
 from threading import Thread
 import PIL.Image
@@ -81,10 +81,11 @@ def main():
             appWindow["-TOUT-"].update(filename[1])
             appWindow["-GET_TAGS-"].update(disabled=False)
             appWindow["-PREVIEW_IMAGE-"].update(filename=filename[0])
-            if filename[0] != filename[1]:
-                os.remove(filename[0])
+            # if filename[0] != filename[1]:
+            #    os.remove(filename[0])
         elif event == "-GET_TAGS-":
-            print("WIP")
+            convertAndScale(filename)
+            appWindow["-TAGS-"] = detect.detect(filename[1])
         time.sleep(0.01)
 
     appWindow.close()

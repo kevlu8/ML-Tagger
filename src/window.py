@@ -44,6 +44,7 @@ def createWindow():
         [sg.Text(size=(40, 1), key="-TOUT-")],
         [sg.Image("icon.png", size=(300, 300), key="-PREVIEW_IMAGE-")],
         [sg.Button(button_text="Get Tags", key="-GET_TAGS-", disabled=True)],
+        [sg.Text("Tags:", size=(10, 1), key="-TAGS-")],
     ]
 
     layout = [
