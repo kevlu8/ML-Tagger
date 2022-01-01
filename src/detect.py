@@ -52,7 +52,7 @@ def detect(imagePath, eventQueue):
     with open("tags.txt") as f:
         tags = f.read().split("\n")
     model = Net()
-    model.load_state_dict(torch.load("weights.pth")["model"])
+    model.load_state_dict(torch.load("weights.pth", "cpu")["model"])
     model.eval()
     estimate = model(transforms.F.to_tensor(cv2.resize(cv2.imread(imagePath, cv2.IMREAD_COLOR), (256, 256))).view((1, 3, 256, 256)).float())
     # tags = model(PIL.Image.open(imagePath))
