@@ -3,4 +3,3 @@ __pycache__
 data
 generateImages.py
 .pytest_cache
-*.pth
